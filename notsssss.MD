@@ -117,6 +117,7 @@ React state'ini güncelledikten hemen sonra, yeni state'i görmek için şu iki 
 1. **`useEffect` Kullanarak State Güncellemesini İzlemek:**
    React `useEffect` hook'u, bir component render edildikten sonra bir işlem yapmamıza olanak tanır. Bu durumda, `myArr`'ın güncellenmesinin ardından `console.log` yazdırabilirsiniz.
 
+## Bir Örnekle Durumu Gösterelim:
    ```tsx
    import { useState, useEffect } from 'react';
 
@@ -181,7 +182,7 @@ React state'ini güncelledikten hemen sonra, yeni state'i görmek için şu iki 
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
-İşte gönderdiğiniz yazıyı Markdown formatında düzenlenmiş haliyle:
+
 
 ```markdown
 ## **React'ta State Güncellemeleri ve Asenkron Davranış**
@@ -206,8 +207,8 @@ Bu davranışın nedeni, **React'ın state güncellemelerinin asenkron** çalı�
 2. **`useEffect` İçinde `reverse` Kullanımı**:  
    `myArr.reverse()`'ı `useEffect` içinde doğrudan kullanmak yerine, ters çevrilmiş diziyi bir değişkende tutup sonra bunu `console.log` ile yazdırabilirsiniz.
 
-### **Güncellenmiş Kod:**
 
+## Bir Örnekle Durumu Gösterelim:
 ```tsx
 import { useState, useEffect } from 'react';
 
@@ -266,4 +267,3 @@ export default App;
 - Diziyi ters çevirmeden önce, yeni bir kopyasını alıp üzerinde işlem yaparak, orijinal diziyi bozmamış olursunuz. Bu, React'ın daha tutarlı çalışmasını sağlar.
 ```
 
-Bu Markdown formatında, kod bloğu ve başlıklar düzgün şekilde görünecektir.
