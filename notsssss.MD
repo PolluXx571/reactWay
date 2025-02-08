@@ -176,6 +176,6 @@ React state'ini güncelledikten hemen sonra, yeni state'i görmek için şu iki 
 - **`useEffect`** hook'unu kullanarak state güncellenmeden sonra işlemi tetikleyebilir ve doğru değeri görebilirsiniz.
 ```
 
-Bu şekilde, yazdığınız sorunun çözümü Markdown formatında düzenlenmiş oldu.
+
 
 

@@ -19,7 +19,9 @@ const App: React.FC = () => {
       };
 
       useEffect(() => {
-            console.log(myArr.reverse());
+            // reverse işlemi yapılmadan önce yeni diziyi alıyoruz
+            const reversedArr = [...myArr].reverse();
+            console.log(reversedArr);
       }, [myArr]);
 
       return (
