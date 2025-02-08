@@ -179,3 +179,91 @@ React state'ini güncelledikten hemen sonra, yeni state'i görmek için şu iki 
 
 
 
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+İşte gönderdiğiniz yazıyı Markdown formatında düzenlenmiş haliyle:
+
+```markdown
+## **React'ta State Güncellemeleri ve Asenkron Davranış**
+
+Bu davranışın nedeni, **React'ın state güncellemelerinin asenkron** çalışmasından kaynaklanmaktadır. Bu durumda `myArr.reverse()` fonksiyonunun nasıl çalıştığını ve `useEffect` içinde neden beklenmedik bir sonuç aldığınızı anlamak önemlidir.
+
+### **Sorun: `myArr.reverse()` Beklenmedik Davranış Gösteriyor**
+
+1. **State Güncellemesi Asenkron Çalışır**:  
+   `setMyArr` çağrısı asenkron olduğu için, `myArr.reverse()` fonksiyonu **state değişikliği tamamlanmadan önce** çalıştırılır. React, state güncellemesi ve render döngüsünü zamanlayarak, güncellenmiş `myArr` değerini hemen almaz.
+
+2. **`reverse()` Fonksiyonunun Kullanımı**:  
+   `reverse()` fonksiyonu, diziyi **yerinde** ters çevirir. Ancak bu, orijinal diziyi değiştirdiği için, dizinin son halini `console.log` ile hemen görmeniz beklenmez. React, `myArr.reverse()` çalıştırıldığında, önceki değeri yazdıracak ve ardından diziyi ters çevirecektir, ancak yeni render döngüsünde değişiklik gerçekleşecektir.
+
+### **Çözüm:**
+
+`myArr.reverse()` fonksiyonunun yan etkisinden (side effect) kaçınmak için, diziyi ters çevirmeyi ve `console.log`'ı doğru şekilde yapmayı şu şekilde düzeltebilirsiniz:
+
+1. **`reverse()` Yerine Yeni Diziyi Dönüştürmek**:  
+   Diziyi ters çevirmek istiyorsanız, **diziyi değiştirmemek** için yeni bir dizi döndürebiliriz. Bu şekilde, `myArr`'ın orijinal hali bozulmaz.
+
+2. **`useEffect` İçinde `reverse` Kullanımı**:  
+   `myArr.reverse()`'ı `useEffect` içinde doğrudan kullanmak yerine, ters çevrilmiş diziyi bir değişkende tutup sonra bunu `console.log` ile yazdırabilirsiniz.
+
+### **Güncellenmiş Kod:**
+
+```tsx
+import { useState, useEffect } from 'react';
+
+const App: React.FC = () => {
+  const [count, setCount] = useState(0);
+  const [multiple, setMultiple] = useState(0);
+  const [myArr, setMyArr] = useState<number[]>([]);
+
+  const takeLastValueCount = () => {
+    setMultiple((prevMultiple) => count * 2);
+  };
+
+  const incrementCount = () => {
+    setCount((prevCount) => prevCount + 1);
+  };
+
+  const decrementCount = () => {
+    setCount((count) => count - 1);
+  };
+
+  const setArr = () => {
+    setMyArr((prevArr) => [...prevArr, count]);
+  };
+
+  // useEffect ile myArr'ı izliyoruz
+  useEffect(() => {
+    // reverse işlemi yapılmadan önce yeni diziyi alıyoruz
+    const reversedArr = [...myArr].reverse();
+    console.log(reversedArr);  // Yeni ters çevrilmiş diziyi yazdırıyoruz
+  }, [myArr]);
+
+  return (
+    <div>
+      <p>{count}</p>
+      <button onClick={incrementCount}>Increment</button>
+      <button onClick={decrementCount}>Decrement</button>
+
+      <div>
+        <button onClick={setArr}>Add to Array</button>
+      </div>
+    </div>
+  );
+};
+
+export default App;
+```
+
+### **Açıklamalar:**
+
+- **`[...myArr].reverse()`**: Bu yöntem, `myArr` dizisini **kopyalar** ve ardından kopyalanan diziyi ters çevirir. Bu sayede orijinal `myArr` dizisi değişmeden kalır.
+
+- **`console.log(reversedArr)`**: `useEffect` tetiklendiğinde, ters çevrilmiş diziyi yazdırıyoruz. Bu şekilde doğru, güncellenmiş ve ters çevrilmiş diziyi görmüş olursunuz.
+
+### **Özet:**
+- `setState` asenkron olduğu için, doğrudan `myArr.reverse()` kullanmak, beklenmedik sonuçlara yol açabilir.
+- Diziyi ters çevirmeden önce, yeni bir kopyasını alıp üzerinde işlem yaparak, orijinal diziyi bozmamış olursunuz. Bu, React'ın daha tutarlı çalışmasını sağlar.
+```
+
+Bu Markdown formatında, kod bloğu ve başlıklar düzgün şekilde görünecektir.
