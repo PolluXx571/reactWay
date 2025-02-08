@@ -1,20 +1,36 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const App: React.FC = () => {
       const [count, setCount] = useState(0);
+      const [multiple, setMultiple] = useState(0);
+      const [myArr, setMyArr] = useState<number[]>([]);
 
+      const takeLastValueCount = () => {
+            setMultiple((prevMultiple) => count * 2);
+      };
       const incrementCount = () => {
-            // bu prevcount nereden geliyor?? reactda kendisinde default olarak bu yerlesmis varmis setcount icine her hangi bir isim bile verirsek bu statenin en son halini alir yani count neye esitse en son onu alir. sistem oyle yapilmis yazilimcilar tarafindan
             setCount((prevCount) => prevCount + 1);
       };
       const decrementCount = () => {
             setCount((count) => count - 1);
       };
+      const setArr = () => {
+            setMyArr((prevArr) => [...prevArr, count]);
+      };
+
+      useEffect(() => {
+            console.log(myArr.reverse());
+      }, [myArr]);
+
       return (
             <div>
                   <p>{count}</p>
                   <button onClick={incrementCount}>increment</button>
                   <button onClick={decrementCount}>decrement</button>
+                  <div>
+                        <button onClick={takeLastValueCount}> Take value and multiple = {multiple}</button>
+                        <button onClick={setArr}> Take array = {myArr}</button>
+                  </div>
             </div>
       );
 };

@@ -1,4 +1,4 @@
-Tabii! İşte yukarıdaki açıklamayı bir **Markdown (MD)** dosyasına uygun formatta düzenledim:
+
 
 ```markdown
 # React `useState` ve `setCount` ile State Yönetimi
@@ -94,5 +94,88 @@ export default App;
 - Bu sayede React, her tıklamada doğru şekilde state değerini günceller ve her seferinde **önceki değeri baz alarak çalışır**.
 ```
 
----
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+```markdown
+# React State Güncellemeleri ve Asenkron Davranış
+
+Bu davranış, **React'ın state güncellemelerinin asenkron (zamanla gerçekleşen) olduğunu** anlamanızla ilgilidir.
+
+### **Neden `console.log(myArr)` İlk Değerle Değil, İkinci Değerle Görünüyor?**
+
+React, `setState` (veya burada `setMyArr`) fonksiyonunu çağırdığınızda **değişiklik hemen yansımaz**. Bunun yerine, React'in render döngüsüne bağlı olarak yeni değerler en son **render** sırasında görünür. Yani, `setMyArr` fonksiyonu çağrıldığında, bu state değişikliği **beklenmedik bir şekilde hemen React'in render döngüsüne uygulanmaz**.
+
+Özetle, `setMyArr` hemen devreye girmez, bunun yerine bir sonraki render döngüsünde **state değişikliği yansır**. Bu nedenle, `console.log(myArr)` çıktısı, **state değişikliği henüz gerçekleşmediği için önceki değeri gösterir**. State'in son halini görmek için, state güncellendikten sonra yapılacak bir render döngüsünü beklemek gerekir.
+
+### **Sorunun Çözümü:**
+
+React state'ini güncelledikten hemen sonra, yeni state'i görmek için şu iki seçeneği kullanabilirsiniz:
+
+1. **`useEffect` Kullanarak State Güncellemesini İzlemek:**
+   React `useEffect` hook'u, bir component render edildikten sonra bir işlem yapmamıza olanak tanır. Bu durumda, `myArr`'ın güncellenmesinin ardından `console.log` yazdırabilirsiniz.
+
+   ```tsx
+   import { useState, useEffect } from 'react';
+
+   const App: React.FC = () => {
+      const [count, setCount] = useState(0);
+      const [multiple, setMultiple] = useState(0);
+      const [myArr, setMyArr] = useState<number[]>([]);
+
+      const takeLastValueCount = () => {
+            setMultiple((prevMultiple) => count * 2);
+      };
+
+      const incrementCount = () => {
+            setCount((prevCount) => prevCount + 1);
+      };
+
+      const decrementCount = () => {
+            setCount((count) => count - 1);
+      };
+
+      const setArr = () => {
+            setMyArr((prevArr) => [...prevArr, count]);
+      };
+
+      // useEffect ile myArr'ı izliyoruz
+      useEffect(() => {
+         console.log(myArr); // State güncellendikten sonra myArr'ı görmek için
+      }, [myArr]); // myArr değiştiğinde tetiklenecek
+
+      return (
+            <div>
+                  <p>{count}</p>
+                  <button onClick={incrementCount}>Increment</button>
+                  <button onClick={decrementCount}>Decrement</button>
+
+                  <div>
+                        <button onClick={setArr}>Add to Array</button>
+                  </div>
+            </div>
+      );
+   };
+
+   export default App;
+   ```
+
+   - Bu örnekte, `myArr`'ın her değişiminde `console.log(myArr)` çıktısı alınacaktır.
+   - **`useEffect`**: `myArr` state'i değiştiğinde tetiklenecek ve her yeni render sonrası doğru şekilde güncellenmiş `myArr` değerini görebileceksiniz.
+
+2. **Yeni State'i Derhal Görmek İçin `useRef` Kullanmak:**
+   Eğer `console.log`'ın hemen çalışmasını istiyorsanız ve aynı anda state'in değişmesini izlemek istiyorsanız, `useRef` kullanabilirsiniz. `useRef` ile state'in eski ve yeni değerlerini hemen izleyebilirsiniz.
+
+   Ancak, **en doğru çözüm React'ın `useEffect` kullanılmasıdır**, çünkü React'in render döngüsüne uygun şekilde işlemler yapar.
+
+### **Özet:**
+
+- React, state güncellemeleri asenkron çalıştığı için, `console.log(myArr)` hemen güncellenmiş `myArr`'ı göstermez. Bunun yerine, **bir sonraki render döngüsünde** yeni `myArr` değerini görürsünüz.
+- **`useEffect`** hook'unu kullanarak state güncellenmeden sonra işlemi tetikleyebilir ve doğru değeri görebilirsiniz.
+```
+
+Bu şekilde, yazdığınız sorunun çözümü Markdown formatında düzenlenmiş oldu.
+
 
